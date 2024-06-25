@@ -39,7 +39,7 @@ module.exports = {
 
             const buttons = songs.map((song, i) =>
                new ButtonBuilder()
-                  .setCustomId(`${i + 1}`)
+                  .setCustomId(`search${i + 1}`)
                   .setLabel(`${i + 1}`)
                   .setStyle(2)
             )
@@ -48,20 +48,19 @@ module.exports = {
             for (let i = 0; i < buttons.length; i += 5) {
                rows.push(new ActionRowBuilder().addComponents(buttons.slice(i, i + 5)))
             }
-            const close = new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel('Close').setStyle('Danger').setCustomId('close'))
+            const close = new ActionRowBuilder().addComponents(
+               new ButtonBuilder().setLabel('Close').setStyle('Danger').setCustomId('searchClose')
+            )
 
             const message = await interaction.reply({ embeds: [embed], components: [...rows, close] })
 
             const filter = (i) => i.user.id === interaction.user.id
-            const listener = message.createMessageComponentCollector({ filter, time: 10000 })
+            const listener = message.createMessageComponentCollector({ filter, time: 30000 })
 
             listener.on('collect', async (button) => {
-               if (button.customId === 'close') {
-                  deleteMessage(message, 100)
+               if (button.customId === 'searchClose') {
                   listener.stop()
-               } else {
-                  deleteMessage(message, 100)
-                  
+               } else if (button.customId.include('search')) {
                   await client.player.play(interaction.member.voice.channel, results[Number(button.customId) - 1].url, {
                      member: interaction.member,
                      textChannel: interaction.channel,
@@ -69,6 +68,7 @@ module.exports = {
                   })
                   listener.stop()
                }
+               deleteMessage(message, 100)
             })
 
             listener.on('end', async () => {

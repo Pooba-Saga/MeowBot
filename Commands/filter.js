@@ -12,7 +12,6 @@ module.exports = {
          const queue = client.player.getQueue(interaction.guild.id)
          const embed = new EmbedBuilder()
             .setColor(client.config.player.embedColor)
-            //.setThumbnail(client.config.player.embedGif)
             .setFooter({ text: `🧩 • ${capFirstChar(interaction.user.globalName)}`, iconURL: interaction.user.avatarURL() })
             .setTimestamp()
 
@@ -22,7 +21,7 @@ module.exports = {
             return
          }
 
-         const filterState = (filter) => (queue.filters.has(filter) ? 'On' : 'Off')
+         const filterState = (filter) => (queue.filters.has(filter) ? 'On ✔️' : 'Off ❌')
          const description = () =>
             `\`\`\`3D・${filterState('3d')}\n` +
             `Stereo・${filterState('haas')}\n` +
@@ -36,7 +35,7 @@ module.exports = {
             new ButtonBuilder().setCustomId('haas').setLabel('Stereo').setStyle('Secondary'),
             new ButtonBuilder().setCustomId('vaporwave').setLabel('Slowed').setStyle('Secondary'),
             new ButtonBuilder().setCustomId('nightcore').setLabel('Nightcore').setStyle('Secondary'),
-            new ButtonBuilder().setCustomId('close').setLabel('Close').setStyle('Danger')
+            new ButtonBuilder().setCustomId('filterClose').setLabel('Close').setStyle('Danger')
          )
 
          const message = await interaction.reply({ embeds: [embed], components: [row] })
@@ -44,7 +43,7 @@ module.exports = {
          const collector = message.createMessageComponentCollector({ filter, time: 120000 })
 
          collector.on('collect', async (button) => {
-            if (button.customId === 'close' || !['3d', 'haas', 'vaporwave', 'nightcore'].includes(button.customId)) {
+            if (button.customId === 'filterClose' || !['3d', 'haas', 'vaporwave', 'nightcore'].includes(button.customId)) {
                collector.stop()
                return
             }
