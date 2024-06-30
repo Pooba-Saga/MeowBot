@@ -1,22 +1,22 @@
 const { EmbedBuilder } = require('discord.js')
 const { formatTime, deleteMessage } = require('../../Function')
 
-module.exports = async (client, queue, song, embed, username, avatar, duration) => {
+module.exports = async (client, queue, song, embed, username, avatar) => {
    const grabEmbed = new EmbedBuilder()
       .setColor(client.config.player.embedColor)
-      .setImage(song.thumbnail)
+      .setImage(client.config.player.embedGifGrab)
       .setAuthor({ name: '─────・ I N F O R M A T I O N 💖・─────', iconURL: queue.textChannel.guild.iconURL() })
-      .setDescription(`**[${song.name}](${song.url})**\n${song.uploader.name}・${duration}・Current ${formatTime(queue.formattedCurrentTime)}`)
-      .setFooter({ text: `🌱 • ${username}`, iconURL: avatar })
+      .setDescription(`\`\`\`${song.url}\`\`\``)
+      .setFooter({ text: `🌱 • ${username} • Current ${formatTime(queue.formattedCurrentTime)}`, iconURL: avatar })
       .setTimestamp()
-
    
    deleteMessage(await queue.textChannel.send({ embeds: [grabEmbed] }), 40000)
 
-   const channel = client.channels.cache.get('1235972414287118397')
+   const channel = client.channels.cache.get('1256209937810456607')
    if (!channel) {
       return
    }
+   await channel.send(song.url)
    await channel.send({ embeds: [grabEmbed] })
 
    embed.setFooter({ text: `🥝 • Song Revealed • ${username}`, iconURL: avatar })

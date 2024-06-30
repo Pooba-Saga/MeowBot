@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js')
-const { capFirstChar, formatTime, loadButton, updateEmbed } = require('../../Function')
+const { capFirstChar, formatTime, loadButton, updateEmbed, auth, reject } = require('../../Function')
 
 module.exports = async (client, queue, song) => {
    try {
@@ -36,12 +36,13 @@ module.exports = async (client, queue, song) => {
          const listener = currentMessage.createMessageComponentCollector()
 
          listener.on('collect', async (interaction) => {
+            if (!auth(client, interaction)) return reject(interaction)
             const embed = EmbedBuilder.from(currentMessage.embeds[0])
    
             const actions = {
                playerAdd: loadButton('../Events/Button/add', interaction),
                playerClear: loadButton('../Events/Button/clear', queue, embed, username, avatar),
-               playerGrab: loadButton('../Events/Button/grab', client, queue, song, embed, username, avatar, duration),
+               playerGrab: loadButton('../Events/Button/grab', client, queue, song, embed, username, avatar),
                playerLoop: loadButton('../Events/Button/loop', queue, embed, username, avatar),
                playerPrev: loadButton('../Events/Button/previous', queue, embed, username, avatar),
                playerQueue: loadButton('../Events/Button/queue', client, queue, embed, username, avatar),
