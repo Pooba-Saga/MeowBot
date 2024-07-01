@@ -3,7 +3,7 @@ $Repo = Join-Path $Local "..\MeowBot"
 $Parent = Get-Item -Path ".."
 
 $RepoURL1 = "https://github.com/ryokr/MeowBot.git"
-$RepoURL2 = "https://github.com/Pooba-Saga/MeowBot"
+$RepoURL2 = "https://github.com/Pooba-Saga/MeowBot.git"
 
 Set-Location -Path $Parent
 git clone $RepoURL2
